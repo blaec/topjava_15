@@ -21,7 +21,7 @@ public class UserMealWithExceed {
     // https://stackoverflow.com/questions/15578981/how-can-i-put-new-line-n-in-tostring
     @Override
     public String toString() {
-        return "UserMealWithExceed{" +
+        return "\nUserMealWithExceed{" +
                 "dateTime=" + dateTime +
                 ", description='" + description + '\'' +
                 ", calories=" + calories +
