@@ -17,6 +17,7 @@ import static java.util.stream.Collectors.toList;
 public class MealsUtil {
 
 
+/*
     public static void main(String[] args) {
         List<MealWithExceed> mealsWithExceeded = getFilteredWithExceeded(MealRepository.getAll(), LocalTime.of(7, 0), LocalTime.of(12, 0), 2000);
         mealsWithExceeded.forEach(System.out::println);
@@ -25,6 +26,7 @@ public class MealsUtil {
         System.out.println(getFilteredWithExceededInOnePass(MealRepository.getAll(), LocalTime.of(7, 0), LocalTime.of(12, 0), 2000));
         System.out.println(getFilteredWithExceededInOnePass2(MealRepository.getAll(), LocalTime.of(7, 0), LocalTime.of(12, 0), 2000));
     }
+*/
 
     public static List<MealWithExceed> getFilteredWithExceeded(List<Meal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
         Map<LocalDate, Integer> caloriesSumByDate = meals.stream()

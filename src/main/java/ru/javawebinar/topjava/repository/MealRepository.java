@@ -48,7 +48,7 @@ public class MealRepository implements Repository {
         return meals.replace(id, newMeal);
     }
 
-    public static List<Meal> getAll() {
+    public List<Meal> getAll() {
         return new ArrayList<>(meals.values());
     }
 
