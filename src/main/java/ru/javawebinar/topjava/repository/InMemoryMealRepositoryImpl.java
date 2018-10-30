@@ -7,9 +7,11 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class InMemoryMealRepositoryImpl implements MealRepository {
     private Map<Integer, Meal> repository = new ConcurrentHashMap<>();
+    private AtomicInteger counter = new AtomicInteger(0);
 
     {
         MealsUtil.MEALS.forEach(this::save);
@@ -18,7 +20,7 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     @Override
     public Meal save(Meal meal) {
         if (meal.isNew()) {
-            meal.setId(meal.getNextId());
+            meal.setId(counter.incrementAndGet());
         }
         return repository.put(meal.getId(), meal);
     }
