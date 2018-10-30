@@ -8,7 +8,8 @@
 <body>
 <h3><a href="index.html">Home</a></h3>
 <h2>Meals</h2>
-
+<a href="meals?action=create">Add Meal</a>
+<hr>
 <table border="1">
     <caption>Lists user meals</caption>
     <tr>
@@ -18,18 +19,16 @@
         <th>Edit</th>
         <th>Delete</th>
     </tr>
-    <jsp:useBean id="meals" scope="request" type="java.util.List<ru.javawebinar.topjava.model.MealWithExceed>"/>
-    <form method="post">
-        <c:forEach var="meal" items="${meals}">
-            <tr style="${meal.exceed ? 'color: green':'color: red'}">
-                <td><javatime:format value="${meal.dateTime}" pattern="dd/MM/yy HH:mm"/></td>
-                <td>${meal.description}</td>
-                <td>${meal.calories}</td>
-                <td><a href="mealsEdit.jsp">Edit</a></td>
-                <td><input type="submit" name="delete" value="Delete"/></td>
-            </tr>
-        </c:forEach>
-    </form>
+    <c:forEach items="${meals}" var="meal">
+        <jsp:useBean id="meal" scope="page" type="ru.javawebinar.topjava.model.MealWithExceed"/>
+        <tr style="${meal.exceed ? 'color: red':'color: green'}">
+            <td><javatime:format value="${meal.dateTime}" pattern="dd/MM/yy HH:mm"/></td>
+            <td>${meal.description}</td>
+            <td>${meal.calories}</td>
+            <td><a href="meals?action=update&id=${meal.id}">Update</a></td>
+            <td><a href="meals?action=delete&id=${meal.id}">Delete</a></td>
+        </tr>
+    </c:forEach>
 </table>
 </body>
 </html>
