@@ -50,6 +50,7 @@ public class MealsUtil {
         return meals.stream()
                 .filter(filter)
                 .map(meal -> createWithExceed(meal, caloriesSumByDate.get(meal.getDate()) > caloriesPerDay))
+                .sorted(Comparator.comparing(MealWithExceed::getDateTime).reversed())
                 .collect(toList());
     }
 

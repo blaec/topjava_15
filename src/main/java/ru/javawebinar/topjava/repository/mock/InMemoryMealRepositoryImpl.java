@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class InMemoryMealRepositoryImpl implements MealRepository {
-    private Map<Integer, Meal> repository = new ConcurrentHashMap<>();
+    private Map<Integer, Map<Integer, Meal>> repository = new ConcurrentHashMap<>();
     private AtomicInteger counter = new AtomicInteger(0);
 
     {
@@ -19,28 +19,37 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
 
     @Override
     public Meal save(Meal meal) {
+        Map<Integer, Meal> userMeals = getMealsOfRegisteredUser(meal.getUserId());
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
-            repository.put(meal.getId(), meal);
+            userMeals.put(meal.getId(), meal);
+            repository.put(meal.getUserId(), userMeals);
             return meal;
         }
         // treat case: update, but absent in storage
-        return repository.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
+        userMeals.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
+        repository.computeIfPresent(meal.getUserId(), (id, oldMeal) -> userMeals);
+        return meal;
     }
 
     @Override
-    public void delete(int id) {
-        repository.remove(id);
+    public void delete(int id, int userId) {
+        getMealsOfRegisteredUser(userId).remove(id);
     }
 
     @Override
-    public Meal get(int id) {
-        return repository.get(id);
+    public Meal get(int id, int userId) {
+        return getMealsOfRegisteredUser(userId).get(id);
     }
 
     @Override
-    public Collection<Meal> getAll() {
-        return repository.values();
+    public Collection<Meal> getAll(int userId) {
+        return getMealsOfRegisteredUser(userId).values();
+    }
+
+    private Map<Integer, Meal> getMealsOfRegisteredUser(int userId) {
+        Map<Integer, Meal> userMeals = repository.get(userId);
+        return userMeals != null ? userMeals : new ConcurrentHashMap<>();
     }
 }
 
