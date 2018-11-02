@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
+import ru.javawebinar.topjava.web.SecurityUtil;
 
 import java.util.Collection;
 
@@ -17,27 +18,29 @@ public class MealRestController {
     private MealService service;
 
     public Meal create(Meal meal) {
+        meal.setUserId(SecurityUtil.authUserId());
         log.info("create new meal for user {}", meal.getUserId());
         return service.create(meal);
     }
 
     public Meal update(Meal meal) {
+        meal.setUserId(SecurityUtil.authUserId());
         log.info("update meal with id {} for user {}", meal.getId(), meal.getUserId());
         return service.update(meal);
     }
 
-    public void delete(int id, int userId)  {
-        log.info("delete meal with id {} for user {}", id, userId);
-        service.delete(id, userId);
+    public void delete(int id)  {
+        log.info("delete meal with id {} for user {}", id, SecurityUtil.authUserId());
+        service.delete(id, SecurityUtil.authUserId());
     }
 
-    public Meal get(int id, int userId)  {
-        log.info("get meal with id {} for user {}", id, userId);
-        return service.get(id, userId);
+    public Meal get(int id)  {
+        log.info("get meal with id {} for user {}", id, SecurityUtil.authUserId());
+        return service.get(id, SecurityUtil.authUserId());
     }
 
-    public Collection<Meal> getAll(int userId) {
-        log.info("get all meals for user {}", userId);
-        return service.getAll(userId);
+    public Collection<Meal> getAll() {
+        log.info("get all meals for user {}", SecurityUtil.authUserId());
+        return service.getAll(SecurityUtil.authUserId());
     }
 }
