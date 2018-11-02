@@ -18,29 +18,29 @@ public class MealRestController {
     private MealService service;
 
     public Meal create(Meal meal) {
-        meal.setUserId(SecurityUtil.authUserId());
+        meal.setUserId(SecurityUtil.getAuthUserId());
         log.info("create new meal for user {}", meal.getUserId());
         return service.create(meal);
     }
 
     public Meal update(Meal meal) {
-        meal.setUserId(SecurityUtil.authUserId());
+        meal.setUserId(SecurityUtil.getAuthUserId());
         log.info("update meal with id {} for user {}", meal.getId(), meal.getUserId());
         return service.update(meal);
     }
 
     public void delete(int id)  {
-        log.info("delete meal with id {} for user {}", id, SecurityUtil.authUserId());
-        service.delete(id, SecurityUtil.authUserId());
+        log.info("delete meal with id {} for user {}", id, SecurityUtil.getAuthUserId());
+        service.delete(id, SecurityUtil.getAuthUserId());
     }
 
     public Meal get(int id)  {
-        log.info("get meal with id {} for user {}", id, SecurityUtil.authUserId());
-        return service.get(id, SecurityUtil.authUserId());
+        log.info("get meal with id {} for user {}", id, SecurityUtil.getAuthUserId());
+        return service.get(id, SecurityUtil.getAuthUserId());
     }
 
     public Collection<Meal> getAll() {
-        log.info("get all meals for user {}", SecurityUtil.authUserId());
-        return service.getAll(SecurityUtil.authUserId());
+        log.info("get all meals for user {}", SecurityUtil.getAuthUserId());
+        return service.getAll(SecurityUtil.getAuthUserId());
     }
 }

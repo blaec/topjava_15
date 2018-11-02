@@ -9,7 +9,6 @@ import ru.javawebinar.topjava.web.SecurityUtil;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 import ru.javawebinar.topjava.web.user.AdminRestController;
 
-import java.io.SequenceInputStream;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
@@ -22,7 +21,7 @@ public class SpringMain {
             adminUserController.create(new User(null, "userName", "email@mail.ru", "password", Role.ROLE_ADMIN));
 
             MealRestController mealRestController = appCtx.getBean(MealRestController.class);
-            mealRestController.create(new Meal(SecurityUtil.authUserId(), LocalDateTime.now(), "test meal", SecurityUtil.authUserCaloriesPerDay()));
+            mealRestController.create(new Meal(SecurityUtil.getAuthUserId(), LocalDateTime.now(), "test meal", SecurityUtil.authUserCaloriesPerDay()));
         }
     }
 }
