@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 
 import javax.servlet.ServletConfig;
@@ -16,19 +15,24 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Collection;
 import java.util.Objects;
 
 public class MealServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(MealServlet.class);
-
+    ConfigurableApplicationContext appCtx;
     private MealRestController controller;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
+        appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
         controller = appCtx.getBean(MealRestController.class);
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        appCtx.close();
     }
 
     @Override
@@ -43,9 +47,7 @@ public class MealServlet extends HttpServlet {
                 String dateTo = request.getParameter("dateTo");
                 String timeFrom = request.getParameter("timeFrom");
                 String timeTo = request.getParameter("timeTo");
-                Collection<Meal> filtered = controller.getFiltered(dateFrom, dateTo, timeFrom, timeTo);
-                request.setAttribute("meals",
-                        MealsUtil.getWithExceeded(filtered, MealsUtil.DEFAULT_CALORIES_PER_DAY));
+                request.setAttribute("meals", controller.getFiltered(dateFrom, dateTo, timeFrom, timeTo));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
             case "default":
@@ -60,7 +62,7 @@ public class MealServlet extends HttpServlet {
                 if (meal.isNew()) {
                     controller.create(meal);
                 } else {
-                    controller.update(meal);
+                    controller.update(meal, Integer.valueOf(id));
                 }
                 response.sendRedirect("meals");
         }
@@ -88,8 +90,7 @@ public class MealServlet extends HttpServlet {
             case "all":
             default:
                 log.info("getAll");
-                request.setAttribute("meals",
-                        MealsUtil.getWithExceeded(controller.getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY));
+                request.setAttribute("meals", controller.getAll());
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
         }
