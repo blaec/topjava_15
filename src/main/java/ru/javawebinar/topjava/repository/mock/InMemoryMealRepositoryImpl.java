@@ -7,6 +7,8 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.MealsUtil;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
@@ -57,6 +59,14 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
         log.info("get all meals for user {}", userId);
         return getMealsOfRegisteredUser(userId).values().stream()
                 .sorted(Comparator.comparing(Meal::getDateTime).reversed())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Collection<Meal> getFiltered(LocalDate dateFrom, LocalDate dateTo, LocalTime timeFrom, LocalTime timeTo, int userId) {
+        return getAll(userId).stream()
+                .filter(meal -> meal.getDate().compareTo(dateFrom) >= 0 & meal.getDate().compareTo(dateTo) <= 0)
+                .filter(meal -> meal.getTime().compareTo(timeFrom) >= 0 & meal.getTime().compareTo(timeTo) <= 0)
                 .collect(Collectors.toList());
     }
 

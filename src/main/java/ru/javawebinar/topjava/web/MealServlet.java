@@ -14,11 +14,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
+import java.util.Collection;
 import java.util.Objects;
 
 public class MealServlet extends HttpServlet {
@@ -45,7 +43,7 @@ public class MealServlet extends HttpServlet {
                 String dateTo = request.getParameter("dateTo");
                 String timeFrom = request.getParameter("timeFrom");
                 String timeTo = request.getParameter("timeTo");
-                List<Meal> filtered = controller.getFiltered(dateFrom, dateTo, timeFrom, timeTo);
+                Collection<Meal> filtered = controller.getFiltered(dateFrom, dateTo, timeFrom, timeTo);
                 request.setAttribute("meals",
                         MealsUtil.getWithExceeded(filtered, MealsUtil.DEFAULT_CALORIES_PER_DAY));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
