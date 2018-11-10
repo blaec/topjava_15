@@ -4,6 +4,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
@@ -60,7 +62,6 @@ public class MealServiceTest {
         service.delete(USER_MEAL_ID_1, ADMIN_ID);
     }
 
-
     @Test
     public void getBetweenDateTimes() {
         List<Meal> meals = service.getBetweenDateTimes(LocalDateTime.of(2015, 5, 30, 0, 0), LocalDateTime.of(2015, 5, 30, 23, 59), USER_ID);
@@ -96,5 +97,11 @@ public class MealServiceTest {
         Meal created = new Meal(LocalDateTime.of(2018, 11, 10, 22, 38), "created", 555);
         service.create(created, ADMIN_ID);
         assertThat(service.getAll(ADMIN_ID)).isEqualTo(Arrays.asList(created, ADMIN_MEAL_2, ADMIN_MEAL_1));
+    }
+
+    @Test(expected = DuplicateKeyException.class)
+    public void createDuplicate() {
+        Meal duplicateMeal = new Meal(ADMIN_MEAL_1.getDateTime(), "duplicate dateTime", 555);
+        service.create(duplicateMeal, ADMIN_ID);
     }
 }
