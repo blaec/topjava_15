@@ -46,7 +46,7 @@ public class MealServiceTest {
         assertThat(actual).isEqualToComparingFieldByField(USER_MEAL_1);
     }
 
-    @Test (expected = NotFoundException.class)
+    @Test(expected = NotFoundException.class)
     public void getNotFound() {
         service.get(USER_MEAL_ID_1, ADMIN_ID);
     }
@@ -54,9 +54,7 @@ public class MealServiceTest {
     @Test
     public void delete() {
         service.delete(USER_MEAL_ID_1, USER_ID);
-        assertThat(service.getAll(USER_ID))
-                .usingFieldByFieldElementComparator()
-                .isEqualTo(Arrays.asList(USER_MEAL_6, USER_MEAL_5, USER_MEAL_4, USER_MEAL_3, USER_MEAL_2));
+        assertMatchMeal(service.getAll(USER_ID), Arrays.asList(USER_MEAL_6, USER_MEAL_5, USER_MEAL_4, USER_MEAL_3, USER_MEAL_2));
     }
 
     @Test(expected = NotFoundException.class)
@@ -67,16 +65,14 @@ public class MealServiceTest {
     @Test
     public void getBetweenDateTimes() {
         List<Meal> meals = service.getBetweenDateTimes(LocalDateTime.of(2015, 5, 30, 0, 0), LocalDateTime.of(2015, 5, 30, 23, 59), USER_ID);
-        assertThat(meals)
-                .usingFieldByFieldElementComparator()
-                .isEqualTo(Arrays.asList(USER_MEAL_3, USER_MEAL_2, USER_MEAL_1));
+        assertMatchMeal(meals, Arrays.asList(USER_MEAL_3, USER_MEAL_2, USER_MEAL_1));
     }
 
     @Test
     public void getAll() {
         assertThat(service.getAll(USER_ID))
                 .usingFieldByFieldElementComparator()
-                .isEqualTo(Arrays.asList(USER_MEAL_6, USER_MEAL_5, USER_MEAL_4, USER_MEAL_3, USER_MEAL_2, USER_MEAL_1));
+                .isEqualTo(MEALS);
     }
 
     @Test
@@ -102,9 +98,7 @@ public class MealServiceTest {
     public void create() {
         Meal created = new Meal(LocalDateTime.of(2018, 11, 10, 22, 38), "created", 555);
         service.create(created, ADMIN_ID);
-        assertThat(service.getAll(ADMIN_ID))
-                .usingFieldByFieldElementComparator()
-                .isEqualTo(Arrays.asList(created, ADMIN_MEAL_2, ADMIN_MEAL_1));
+        assertMatchMeal(service.getAll(ADMIN_ID), Arrays.asList(created, ADMIN_MEAL_2, ADMIN_MEAL_1));
     }
 
     @Test(expected = DuplicateKeyException.class)
