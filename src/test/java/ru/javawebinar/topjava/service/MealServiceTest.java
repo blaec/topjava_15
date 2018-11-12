@@ -43,7 +43,7 @@ public class MealServiceTest {
     @Test
     public void get() {
         Meal actual = service.get(USER_MEAL_ID_1, USER_ID);
-        assertThat(actual).isEqualTo(USER_MEAL_1);
+        assertThat(actual).isEqualToComparingFieldByField(USER_MEAL_1);
     }
 
     @Test (expected = NotFoundException.class)
@@ -54,7 +54,9 @@ public class MealServiceTest {
     @Test
     public void delete() {
         service.delete(USER_MEAL_ID_1, USER_ID);
-        assertThat(service.getAll(USER_ID)).isEqualTo(Arrays.asList(USER_MEAL_6, USER_MEAL_5, USER_MEAL_4, USER_MEAL_3, USER_MEAL_2));
+        assertThat(service.getAll(USER_ID))
+                .usingFieldByFieldElementComparator()
+                .isEqualTo(Arrays.asList(USER_MEAL_6, USER_MEAL_5, USER_MEAL_4, USER_MEAL_3, USER_MEAL_2));
     }
 
     @Test(expected = NotFoundException.class)
@@ -65,19 +67,23 @@ public class MealServiceTest {
     @Test
     public void getBetweenDateTimes() {
         List<Meal> meals = service.getBetweenDateTimes(LocalDateTime.of(2015, 5, 30, 0, 0), LocalDateTime.of(2015, 5, 30, 23, 59), USER_ID);
-        assertThat(meals).isEqualTo(Arrays.asList(USER_MEAL_3, USER_MEAL_2, USER_MEAL_1));
+        assertThat(meals)
+                .usingFieldByFieldElementComparator()
+                .isEqualTo(Arrays.asList(USER_MEAL_3, USER_MEAL_2, USER_MEAL_1));
     }
 
     @Test
     public void getAll() {
-        assertThat(service.getAll(USER_ID)).isEqualTo(Arrays.asList(USER_MEAL_6, USER_MEAL_5, USER_MEAL_4, USER_MEAL_3, USER_MEAL_2, USER_MEAL_1));
+        assertThat(service.getAll(USER_ID))
+                .usingFieldByFieldElementComparator()
+                .isEqualTo(Arrays.asList(USER_MEAL_6, USER_MEAL_5, USER_MEAL_4, USER_MEAL_3, USER_MEAL_2, USER_MEAL_1));
     }
 
     @Test
     public void update() {
         Meal updated = getUpdatedMeal();
         service.update(updated, USER_ID);
-        assertThat(service.get(USER_MEAL_ID_1, USER_ID)).isEqualTo(updated);
+        assertThat(service.get(USER_MEAL_ID_1, USER_ID)).isEqualToComparingFieldByField(updated);
     }
 
     @Test(expected = NotFoundException.class)
@@ -96,7 +102,9 @@ public class MealServiceTest {
     public void create() {
         Meal created = new Meal(LocalDateTime.of(2018, 11, 10, 22, 38), "created", 555);
         service.create(created, ADMIN_ID);
-        assertThat(service.getAll(ADMIN_ID)).isEqualTo(Arrays.asList(created, ADMIN_MEAL_2, ADMIN_MEAL_1));
+        assertThat(service.getAll(ADMIN_ID))
+                .usingFieldByFieldElementComparator()
+                .isEqualTo(Arrays.asList(created, ADMIN_MEAL_2, ADMIN_MEAL_1));
     }
 
     @Test(expected = DuplicateKeyException.class)

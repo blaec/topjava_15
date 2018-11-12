@@ -7,6 +7,7 @@ import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 
 public class MealTestData {
@@ -38,4 +39,12 @@ public class MealTestData {
             ADMIN_MEAL_1,
             ADMIN_MEAL_2
     );
+
+    public static void assertMatchMeal(Iterable<Meal> actual, Meal... expected) {
+        assertMatchMeal(actual, Arrays.asList(expected));
+    }
+
+    public static void assertMatchMeal(Iterable<Meal> actual, Iterable<Meal> expected) {
+        assertThat(actual).usingElementComparatorOnFields("id", "dateTime", "description", "calories").isEqualTo(expected);
+    }
 }
