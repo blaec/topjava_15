@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/blaec/topjava_15.svg?branch=master)](https://travis-ci.org/blaec/topjava_15)
+[![Build Status](https://travis-ci.org/blaec/topjava_15.svg?branch=master)](https://travis-ci.org/blaec/topjava_15) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/105630cc392d4e00b7624d01ff05ddd2)](https://www.codacy.com/app/blaec/topjava_15?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=blaec/topjava_15&amp;utm_campaign=Badge_Grade)
 
 Java Enterprise Online Project 
 ===============================
