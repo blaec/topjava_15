@@ -11,9 +11,11 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @NamedQueries({
-//        @NamedQuery(name = Meal.DELETE, query = "DELETE FROM User u WHERE u.id=:id"),
-//        @NamedQuery(name = Meal.BY_EMAIL, query = "SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.email=?1"),
-//        @NamedQuery(name = Meal.ALL_SORTED, query = "SELECT u FROM User u LEFT JOIN FETCH u.roles ORDER BY u.name, u.email"),
+        @NamedQuery(name = Meal.DELETE, query = "DELETE FROM Meal m WHERE m.id=:id AND m.user.id=:userId"),
+        @NamedQuery(name = Meal.ALL_SORTED, query = "SELECT m FROM Meal m WHERE m.user.id=:userId ORDER BY m.dateTime DESC"),
+        @NamedQuery(name = Meal.GET, query = "SELECT m FROM Meal m WHERE m.id=:id AND m.user.id=:userId"),
+        @NamedQuery(name = Meal.BETWEEN_SORTED, query = "SELECT m FROM Meal m WHERE m.user.id=:userId " +
+                "AND m.dateTime BETWEEN :start AND :end ORDER BY m.dateTime DESC"),
 })
 @Entity
 @Table(name = "meals",
@@ -21,9 +23,10 @@ import java.time.LocalTime;
                                               name = "meals_unique_user_datetime_idx")})
 public class Meal extends AbstractBaseEntity {
 
-//    public static final String DELETE = "Meal.delete";
-//    public static final String BY_EMAIL = "Meal.getByEmail";
-//    public static final String ALL_SORTED = "Meal.getAllSorted";
+    public static final String DELETE = "Meal.delete";
+    public static final String ALL_SORTED = "Meal.getAllSorted";
+    public static final String GET = "Meal.getSingle";
+    public static final String BETWEEN_SORTED = "Meal.getBetweenSorted";
 
     @Column(name = "date_time", nullable = false)
     @NotNull

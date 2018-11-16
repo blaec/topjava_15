@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import javax.persistence.NoResultException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,7 +25,13 @@ public class MealServiceImpl implements MealService {
 
     @Override
     public Meal get(int id, int userId) {
-        return checkNotFoundWithId(repository.get(id, userId), id);
+        Meal meal;
+        try {
+            meal = repository.get(id, userId);
+        } catch (NoResultException e) {
+            throw new NotFoundException("Trying to fetch another user's meal, id = " + id);
+        }
+        return checkNotFoundWithId(meal, id);
     }
 
     @Override
@@ -45,7 +53,13 @@ public class MealServiceImpl implements MealService {
 
     @Override
     public void update(Meal meal, int userId) {
-        checkNotFoundWithId(repository.save(meal, userId), meal.getId());
+        Meal updated = null;
+        try {
+            updated = repository.save(meal, userId);
+        } catch (NoResultException e) {
+            throw new NotFoundException("Trying to update another user's meal, id = " + meal.getId());
+        }
+        checkNotFoundWithId(updated, meal.getId());
     }
 
     @Override
