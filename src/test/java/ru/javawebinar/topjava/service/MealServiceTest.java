@@ -1,8 +1,12 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.AfterClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.rules.TestName;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +17,15 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Stream;
 
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
@@ -27,8 +38,40 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @RunWith(SpringJUnit4ClassRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
+    private static List<String> testLog = new ArrayList<String>() {
+        {
+            add("MealServiceTest results:");
+        }
+    };
+
     @Rule
     public final ExpectedException thrown = ExpectedException.none();
+
+    @Rule
+    public final TestName name = new TestName();
+
+    @Rule
+    public TestWatcher watcher = new TestWatcher() {
+        private Instant startTime;
+
+        @Override
+        protected void starting(Description description) {
+            startTime = Instant.now();
+        }
+
+        @Override
+        protected void finished(Description description) {
+            Duration duration = Duration.between(startTime, Instant.now());
+            String methodName = name.getMethodName();
+            long millis = duration.toMillis();
+
+            System.out.printf("%s\nTest '%s' executed %dms\n\n", String.join("", Collections.nCopies(34, "_")), methodName, millis);
+            String dash = String.join("", Collections.nCopies(30 - methodName.length() - String.valueOf(millis).length(), "."));
+            testLog.add(String.format("%s %s %dms", methodName, dash, millis));
+        }
+
+
+    };
 
     static {
         SLF4JBridgeHandler.install();
@@ -36,6 +79,11 @@ public class MealServiceTest {
 
     @Autowired
     private MealService service;
+
+    @AfterClass
+    public static void afterClass() {
+        testLog.forEach(System.out::println);
+    }
 
     @Test
     public void delete() throws Exception {
