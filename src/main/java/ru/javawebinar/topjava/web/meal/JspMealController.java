@@ -4,12 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.javawebinar.topjava.model.Meal;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/meals")
@@ -43,15 +45,36 @@ public class JspMealController {
         return "redirect:/meals";
     }
 
+    @PostMapping("/save")
+    public String save(HttpServletRequest request) {
+        Meal meal = new Meal(
+                LocalDateTime.parse(request.getParameter("dateTime")),
+                request.getParameter("description"),
+                Integer.parseInt(request.getParameter("calories")));
+
+        if (request.getParameter("id").isEmpty()) {
+            mealController.create(meal);
+        } else {
+            mealController.update(meal, getId(request));
+        }
+
+        return "redirect:/meals";
+    }
+
 /*
     @PostMapping("/filter")
-    public String setUser(HttpServletRequest request) {
+    public String filter(HttpServletRequest request) {
         LocalDate startDate = parseLocalDate(request.getParameter("startDate"));
         LocalDate endDate = parseLocalDate(request.getParameter("endDate"));
         LocalTime startTime = parseLocalTime(request.getParameter("startTime"));
         LocalTime endTime = parseLocalTime(request.getParameter("endTime"));
         request.setAttribute("meals", mealController.getBetween(startDate, startTime, endDate, endTime));
-        return "meals";
+        return "redirect:/meals";
     }
 */
+
+    private int getId(HttpServletRequest request) {
+        String paramId = Objects.requireNonNull(request.getParameter("id"));
+        return Integer.parseInt(paramId);
+    }
 }
