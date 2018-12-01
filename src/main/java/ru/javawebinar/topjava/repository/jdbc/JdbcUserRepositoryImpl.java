@@ -13,7 +13,10 @@ import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Repository
@@ -85,8 +88,8 @@ public class JdbcUserRepositoryImpl implements UserRepository {
 
             while (rs.next()) {
                 int id = rs.getInt("id");
-                User user = users.computeIfAbsent(id, u -> new User());
-                Role role = Role.valueOf(rs.getString("role"));
+                User user = users.computeIfAbsent(id, u -> new User(){{setRoles(null);}});
+                user.getRoles().add(Role.valueOf(rs.getString("role")));
 
                 if (user.isNew()) {
                     user.setId(id);
@@ -96,9 +99,6 @@ public class JdbcUserRepositoryImpl implements UserRepository {
                     user.setEnabled(rs.getBoolean("enabled"));
                     user.setRegistered(rs.getTimestamp("registered"));
                     user.setCaloriesPerDay(rs.getInt("calories_per_day"));
-                    user.setRoles(Collections.singleton(role));
-                } else {
-                    user.getRoles().add(role);
                 }
             }
             return users.values().stream()
