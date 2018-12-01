@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -81,15 +80,15 @@ public class JdbcUserRepositoryImpl implements UserRepository {
 
     @Override
     public List<User> getAll() {
-        return jdbcTemplate.query("SELECT * FROM users u JOIN user_roles ur ON u.id = ur.user_id ORDER BY name, email", (ResultSetExtractor<List<User>>) rs -> {
+        return jdbcTemplate.query("SELECT * FROM users u JOIN user_roles ur ON u.id = ur.user_id", rs -> {
             Map<Integer, User> users = new HashMap<>();
 
             while (rs.next()) {
                 int id = rs.getInt("id");
-                User user = new User();
+                User user = users.computeIfAbsent(id, u -> new User());
                 Role role = Role.valueOf(rs.getString("role"));
 
-                if (!users.containsKey(id)) {
+                if (user.isNew()) {
                     user.setId(id);
                     user.setName(rs.getString("name"));
                     user.setEmail(rs.getString("email"));
@@ -99,13 +98,8 @@ public class JdbcUserRepositoryImpl implements UserRepository {
                     user.setCaloriesPerDay(rs.getInt("calories_per_day"));
                     user.setRoles(Collections.singleton(role));
                 } else {
-                    user = users.get(id);
-                    Set<Role> userRoles = user.getRoles();
-                    userRoles.add(role);
-                    user.setRoles(userRoles);
+                    user.getRoles().add(role);
                 }
-
-                users.put(id, user);
             }
             return users.values().stream()
                     .sorted(Comparator.comparing(User::getName).thenComparing(User::getEmail))
