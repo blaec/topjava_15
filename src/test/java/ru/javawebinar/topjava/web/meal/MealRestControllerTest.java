@@ -9,7 +9,6 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
 import ru.javawebinar.topjava.web.json.JsonUtil;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -88,24 +87,14 @@ public class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testGetFiltered() throws Exception {
-/*
         mockMvc.perform(get(REST_URL +
-                    "filter?startDate=" + LocalDate.of(2015, 05, 30)))
-*/
-/*
-        mockMvc.perform(get(REST_URL +
-                    "filter?startDate=" + LocalDate.of(2015, 05, 30) +
-                    "&endDate=" + LocalDate.of(2015,05,30)))
-*/
-        mockMvc.perform(get(REST_URL +
-                    "filter?startDate=" + LocalDate.of(2015, 05, 30) +
+                    "filter?startDate=" +
                     "&startTime=" + LocalTime.of(9, 0, 0) +
-                    "&endDate=" + LocalDate.of(2015, 05, 31) +
+                    "&endDate=" +
                     "&endTime=" + LocalTime.of(11, 0, 0)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(contentJson(MEAL1, MEAL4));
     }
-
 }
