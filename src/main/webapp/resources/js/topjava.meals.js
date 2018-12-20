@@ -34,3 +34,21 @@ $(function () {
     });
     makeEditable();
 });
+
+function clearFilter() {
+    // $("#filter").find(":input").reset();
+    // $("#filter").find(":input").cleanData;
+    $("#filter").find(":input").val("");
+}
+
+function filter() {
+    let form = $("#filter");
+    $.ajax({
+        type: "GET",
+        url: ajaxUrl + "filter",
+        data: form.serialize()
+    }).done(function (data) {
+        datatableApi.clear().rows.add(data).draw();
+        successNoty("data filtered");
+    });
+}
