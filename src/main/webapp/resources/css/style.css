@@ -15,6 +15,14 @@ dd {
     vertical-align: top;
 }
 
+.lightgray {
+    color: lightgray;
+}
+
+tr[data-enabled="false"] {
+    color: lightgray;
+}
+
 tr[data-mealExcess="false"] {
     color: green;
 }
