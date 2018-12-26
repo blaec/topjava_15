@@ -70,4 +70,61 @@ $(function () {
         }),
         updateTable: updateFilteredTable
     });
+
+//  http://xdsoft.net/jqplugins/datetimepicker/
+    const startDate = $('#startDate');
+    const endDate = $('#endDate');
+    const dateFormat = 'Y-m-d';
+    const theme = 'dark';
+    startDate.datetimepicker({
+        timepicker: false,
+        format: dateFormat,
+        formatDate: dateFormat,
+        onShow: function (ct) {
+            this.setOptions({
+                maxDate: endDate.val() ? endDate.val() : false
+            })
+        },
+        theme:theme
+    });
+    endDate.datetimepicker({
+        timepicker: false,
+        format: dateFormat,
+        formatDate: dateFormat,
+        onShow: function (ct) {
+            this.setOptions({
+                minDate: startDate.val() ? startDate.val() : false
+            })
+        },
+        theme:theme
+    });
+
+    const startTime = $('#startTime');
+    const endTime = $('#endTime');
+    const timeFormat = 'H:i';
+    startTime.datetimepicker({
+        datepicker: false,
+        format: timeFormat,
+        onShow: function (ct) {
+            this.setOptions({
+                maxTime: endTime.val() ? endTime.val() : false
+            })
+        },
+        theme:theme
+    });
+    endTime.datetimepicker({
+        datepicker: false,
+        format: timeFormat,
+        onShow: function (ct) {
+            this.setOptions({
+                minTime: startTime.val() ? startTime.val() : false
+            })
+        },
+        theme:theme
+    });
+
+    $('#dateTime').datetimepicker({
+        format: dateFormat + ' ' + timeFormat,
+        theme:theme
+    });
 });
