@@ -5,10 +5,7 @@ function updateFilteredTable() {
         type: "GET",
         url: mealAjaxUrl + "filter",
         data: $("#filter").serialize()
-    }).done( function () {
-        updateTableByData;
-        successNoty("meal.filtered");
-    });
+    }).done(updateTableByData);
 }
 
 function clearFilter() {
@@ -32,7 +29,7 @@ $(function () {
                     "data": "dateTime",
                     "render": function (data, type, row) {
                         if (type === "display") {
-                            return data.replace('T', ' ');
+                            return formatDate(data);
                         }
                         return data;
                     }
