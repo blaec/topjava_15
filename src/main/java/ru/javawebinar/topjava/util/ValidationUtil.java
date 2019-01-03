@@ -8,6 +8,7 @@ import ru.javawebinar.topjava.util.exception.IllegalRequestDataException;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 public class ValidationUtil {
 
@@ -76,5 +77,11 @@ public class ValidationUtil {
 
     public static String getMessage(Throwable e) {
         return e.getLocalizedMessage() != null ? e.getLocalizedMessage() : e.getClass().getName();
+    }
+
+    public static String getErrorList(BindingResult result) {
+        return result.getFieldErrors().stream()
+                .map(e -> "<b>" + e.getField() + "</b>" + ": " + e.getDefaultMessage())
+                .collect(Collectors.joining("<br>"));
     }
 }
