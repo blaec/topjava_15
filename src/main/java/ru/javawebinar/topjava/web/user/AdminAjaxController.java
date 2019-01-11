@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.web.user;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.validation.BindingResult;
@@ -16,6 +17,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/ajax/admin/users")
 public class AdminAjaxController extends AbstractUserController {
+
+    @Autowired
+    EmailValidator emailValidator;
 
     @Override
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -38,6 +42,7 @@ public class AdminAjaxController extends AbstractUserController {
 
     @PostMapping
     public void createOrUpdate(@Valid UserTo userTo, BindingResult result) {
+        emailValidator.validate(userTo, result);
         if (result.hasErrors()) {
             throw new NotFoundException(ValidationUtil.getErrorList(result));
         }
