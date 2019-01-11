@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javawebinar.topjava.model.User;
+import ru.javawebinar.topjava.web.EmailValidator;
 
 import javax.validation.Valid;
 import java.net.URI;

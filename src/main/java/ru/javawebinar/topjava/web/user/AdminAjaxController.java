@@ -10,6 +10,7 @@ import ru.javawebinar.topjava.to.UserTo;
 import ru.javawebinar.topjava.util.UserUtil;
 import ru.javawebinar.topjava.util.ValidationUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
+import ru.javawebinar.topjava.web.EmailValidator;
 
 import javax.validation.Valid;
 import java.util.List;

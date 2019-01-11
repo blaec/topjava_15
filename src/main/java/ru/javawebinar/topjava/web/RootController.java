@@ -12,7 +12,6 @@ import org.springframework.web.bind.support.SessionStatus;
 import ru.javawebinar.topjava.to.UserTo;
 import ru.javawebinar.topjava.util.UserUtil;
 import ru.javawebinar.topjava.web.user.AbstractUserController;
-import ru.javawebinar.topjava.web.user.EmailValidator;
 
 import javax.validation.Valid;
 

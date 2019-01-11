@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.web.meal;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.validation.BindingResult;
@@ -8,6 +9,7 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.ValidationUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
+import ru.javawebinar.topjava.web.MealValidator;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -17,6 +19,9 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/ajax/profile/meals")
 public class MealAjaxController extends AbstractMealController {
+
+    @Autowired
+    MealValidator mealValidator;
 
     @Override
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -40,6 +45,7 @@ public class MealAjaxController extends AbstractMealController {
     @PostMapping
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void createOrUpdate(@Valid Meal meal, BindingResult result) {
+        mealValidator.validate(meal, result);
         if (result.hasErrors()) {
             throw new NotFoundException(ValidationUtil.getErrorList(result));
         }
