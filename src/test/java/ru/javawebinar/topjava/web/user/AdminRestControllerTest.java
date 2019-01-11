@@ -6,6 +6,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import ru.javawebinar.topjava.TestUtil;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
+import ru.javawebinar.topjava.util.exception.ErrorType;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
 
 import java.util.Collections;
@@ -109,7 +110,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testCreate() throws Exception {
-        User expected = new User(null, "New", "new@gmail.com", "newPass", 2300, Role.ROLE_USER, Role.ROLE_ADMIN);
+        User expected = new User(null, "New", "user@yandex.ru", "newPass", 2300, Role.ROLE_USER, Role.ROLE_ADMIN);
         ResultActions action = mockMvc.perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(ADMIN))
@@ -131,7 +132,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
                 .with(userHttpBasic(ADMIN))
                 .content(jsonWithPassword(expected, "newPass")))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string(containsString("VALIDATION_ERROR")));
+                .andExpect(content().string(containsString(ErrorType.VALIDATION_ERROR.toString())));
     }
 
     @Test
